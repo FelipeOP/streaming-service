@@ -7,11 +7,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.alternova.streaming.dto.StreamingContentDto;
 import com.alternova.streaming.persistence.constants.StreamingType;
 import com.alternova.streaming.persistence.entity.StreamingContent;
 
+@Repository
 public interface StreamingRepository extends JpaRepository<StreamingContent, Long> {
 
     @Query(value = "SELECT new com.alternova.streaming.dto.StreamingContentDto"

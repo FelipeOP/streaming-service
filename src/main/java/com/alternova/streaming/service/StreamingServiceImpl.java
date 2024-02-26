@@ -9,13 +9,13 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.alternova.auth.persistence.entity.User;
 import com.alternova.streaming.dto.StreamingContentDto;
 import com.alternova.streaming.dto.UserRequest;
 import com.alternova.streaming.mapper.StreamingContentMapper;
 import com.alternova.streaming.persistence.constants.StreamingType;
 import com.alternova.streaming.persistence.entity.StreamingContent;
 import com.alternova.streaming.persistence.entity.StreamingMetadata;
-import com.alternova.streaming.persistence.entity.User;
 import com.alternova.streaming.persistence.repository.StreamingMetadataRepository;
 import com.alternova.streaming.persistence.repository.StreamingRepository;
 
@@ -94,10 +94,12 @@ public class StreamingServiceImpl implements StreamingService {
                 }, () -> {
                     request.setScore(0);
                     var newMetadata = saveMetadata(content, request);
-                    content.setStreamingMetadata(Collections.singleton(newMetadata));
+                    content.setStreamingMetadata(new HashSet<>(Set.of(newMetadata)));
                 });
 
-        var count = metadataRepository.countViewsByContentId(request.getContentId());
+        var count = metadataRepository
+                .countViewsByContentId(request.getContentId())
+                .orElse(0L);
         content.setViews(count);
 
         return StreamingContentMapper.mapToDto(streamingRepository.save(content));
@@ -117,7 +119,7 @@ public class StreamingServiceImpl implements StreamingService {
                 }, () -> {
                     request.setViewed(true);
                     var newMetadata = saveMetadata(content, request);
-                    content.setStreamingMetadata(Collections.singleton(newMetadata));
+                    content.setStreamingMetadata(new HashSet<>(Set.of(newMetadata)));
                 });
 
         var average = metadataRepository
@@ -134,7 +136,7 @@ public class StreamingServiceImpl implements StreamingService {
         metadata.setStreamingContent(content);
         metadata.setScore(request.getScore());
         metadata.setViewed(request.isViewed());
-        metadata.setUser(new User(request.getUserId(), Collections.singleton(metadata)));
+        metadata.setUser(User.builder().id(request.getUserId()).build());
         return metadataRepository.save(metadata);
     }
 
