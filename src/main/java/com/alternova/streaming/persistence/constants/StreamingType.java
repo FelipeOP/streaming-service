@@ -1,6 +1,6 @@
 package com.alternova.streaming.persistence.constants;
 
-public enum MovieType {
+public enum StreamingType {
     SERIE,
     MOVIE
 }

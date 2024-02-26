@@ -1,13 +1,14 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/movies
+    url: jdbc:postgresql://localhost:5432/streamings
     password: root
     username: postgres
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
+      
 logging:
   level:
     root: INFO
