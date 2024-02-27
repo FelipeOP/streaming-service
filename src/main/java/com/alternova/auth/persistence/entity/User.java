@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.alternova.auth.persistence.constants.Role;
 import com.alternova.streaming.persistence.entity.StreamingMetadata;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Entity;
@@ -42,42 +43,51 @@ public class User implements UserDetails {
     private Long id;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<StreamingMetadata> streamingMetadata;
 
     private String email;
-
+    
+    @JsonIgnore
     private String password;
     
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return email;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
 
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }

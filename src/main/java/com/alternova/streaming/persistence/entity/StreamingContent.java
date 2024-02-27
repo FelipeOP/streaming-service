@@ -1,17 +1,12 @@
 package com.alternova.streaming.persistence.entity;
 
 import java.util.Set;
-import java.util.UUID;
 
-import com.alternova.streaming.persistence.constants.StreamingType;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +31,7 @@ public class StreamingContent {
 
     private String genre;
 
-    private StreamingType type;
+    private String type;
 
     private Long views;
 

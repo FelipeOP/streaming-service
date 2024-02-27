@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 
 import com.alternova.streaming.dto.StreamingContentDto;
 import com.alternova.streaming.dto.UserRequest;
-import com.alternova.streaming.persistence.entity.StreamingMetadata;
+import com.alternova.streaming.persistence.entity.StreamingContent;
 
 public interface StreamingService {
 
@@ -23,5 +23,7 @@ public interface StreamingService {
     StreamingContentDto markAsViewed(UserRequest request);
 
     StreamingContentDto rateContent(UserRequest request);
+
+    List<StreamingContentDto> findAll(Sort sort);
 
 }

@@ -29,12 +29,12 @@ public class AuthServiceImpl implements AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        UserDetails userDetails = userRepository
+        User userDetails = userRepository
                 .findByEmail(loginRequest.getEmail())
                 .orElseThrow();
 
         String token = jwtService.getToken(userDetails);
-        return new AuthResponse(token);
+        return new AuthResponse(token, userDetails.getId());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRepository.save(user);
-        return new AuthResponse(jwtService.getToken(user));
+        return new AuthResponse(jwtService.getToken(user), user.getId());
     }
 
 }

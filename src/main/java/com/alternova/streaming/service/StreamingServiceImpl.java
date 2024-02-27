@@ -1,11 +1,9 @@
 package com.alternova.streaming.service;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -31,28 +29,40 @@ public class StreamingServiceImpl implements StreamingService {
     private final EntityManager entityManager;
 
     @Override
-    public StreamingContentDto getRandomMovie() {
-        return streamingRepository.selectRandomContentByType(StreamingType.MOVIE);
-    }
-
-    @Override
-    public StreamingContentDto getRandomSerie() {
-        return streamingRepository.selectRandomContentByType(StreamingType.SERIE);
-    }
-
-    @Override
-    public List<StreamingContentDto> findAllMoviesSortBy(Sort sort) {
+    public List<StreamingContentDto> findAll(Sort sort) {
         return streamingRepository
-                .findAllByType(StreamingType.MOVIE, sort)
+                .findAll(sort)
                 .stream()
                 .map(StreamingContentMapper::mapToDto)
                 .toList();
     }
 
     @Override
+    public StreamingContentDto getRandomMovie() {
+        var content = streamingRepository.findRandomByType(StreamingType.MOVIE.name());
+        return StreamingContentMapper.mapToDto(content);
+    }
+
+    @Override
+    public StreamingContentDto getRandomSerie() {
+        var content = streamingRepository.findRandomByType(StreamingType.SERIE.name());
+        return StreamingContentMapper.mapToDto(content);
+    }
+
+    @Override
+    public List<StreamingContentDto> findAllMoviesSortBy(Sort sort) {
+        return streamingRepository
+                .findAllByType(StreamingType.MOVIE.name(), sort)
+                .stream()
+                .map(StreamingContentMapper::mapToDto)
+                .toList();
+
+    }
+
+    @Override
     public List<StreamingContentDto> findAllSeriesSortBy(Sort sort) {
         return streamingRepository
-                .findAllByType(StreamingType.SERIE, sort)
+                .findAllByType(StreamingType.SERIE.name(), sort)
                 .stream()
                 .map(StreamingContentMapper::mapToDto)
                 .toList();
@@ -62,22 +72,16 @@ public class StreamingServiceImpl implements StreamingService {
     public List<StreamingContentDto> findContentFilterBy(
             String field,
             String value) throws IllegalArgumentException {
-        var builder = entityManager.getCriteriaBuilder();
-        var query = builder.createQuery(StreamingContentDto.class);
-        var root = query.from(StreamingContent.class);
 
-        query.select(builder.construct(
-                StreamingContentDto.class,
-                root.get("id"),
-                root.get("name"),
-                root.get("genre"),
-                root.get("type"),
-                root.get("views"),
-                root.get("rating")));
+        var query = entityManager
+                .createQuery("SELECT s FROM StreamingContent s WHERE s." + field + " ILIKE :value",
+                        StreamingContent.class)
+                .setParameter("value", "%" + value + "%");
 
-        query.where(builder.like(builder.lower(root.get(field)), "%" + value.toLowerCase() + "%"));
-
-        return entityManager.createQuery(query).getResultList();
+        return query.getResultList()
+                .stream()
+                .map(StreamingContentMapper::mapToDto)
+                .toList();
     }
 
     @Override

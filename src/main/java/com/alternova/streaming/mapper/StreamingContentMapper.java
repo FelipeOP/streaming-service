@@ -10,12 +10,13 @@ public class StreamingContentMapper {
 
     public static StreamingContent mapToEntity(StreamingContentDto streamingContentDto) {
         return StreamingContent.builder()
-                .id(streamingContentDto.id())
-                .name(streamingContentDto.name())
-                .genre(streamingContentDto.genre())
-                .type(streamingContentDto.type())
-                .views(streamingContentDto.views())
-                .rating(streamingContentDto.rating())
+                .id(streamingContentDto.getId())
+                .name(streamingContentDto.getName())
+                .genre(streamingContentDto.getGenre())
+                .type(streamingContentDto.getType())
+                .views(streamingContentDto.getViews())
+                .rating(streamingContentDto.getRating())
+                .streamingMetadata(streamingContentDto.getStreamingMetadata())
                 .build();
     }
 
@@ -26,7 +27,9 @@ public class StreamingContentMapper {
                 streamingContent.getGenre(),
                 streamingContent.getType(),
                 streamingContent.getViews(),
-                streamingContent.getRating());
+                streamingContent.getRating(),
+                streamingContent.getStreamingMetadata());
+
     }
 
 }

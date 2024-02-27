@@ -3,6 +3,7 @@ package com.alternova.streaming.persistence.entity;
 import java.util.UUID;
 
 import com.alternova.auth.persistence.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +31,7 @@ public class StreamingMetadata {
 
     @ManyToOne
     @JoinColumn(name = "streaming_content_id", referencedColumnName = "id")
+    @JsonIgnore
     private StreamingContent streamingContent;
 
     @ManyToOne
